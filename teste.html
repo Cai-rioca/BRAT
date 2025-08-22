@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Das Grune - Digitize Ideas</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #c4f82a;
+      color: #000;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .header {
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 25px 50px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(196,248,42,0.9); backdrop-filter: blur(10px);
+      z-index: 1000; opacity: 0;
+    }
+    .logo { font-weight: bold; }
+    .nav { display: flex; gap: 40px; }
+    .nav a { text-decoration: none; font-weight: bold; color: #000; }
+
+    .main-content {
+      display: flex; justify-content: space-between;
+      padding: 150px 50px 200px;
+    }
+    .left-side { flex: 1; }
+    .main-title {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(5rem, 9vw, 10rem);
+      line-height: 0.9;
+      margin-bottom: 40px;
+      opacity: 0; transform: translateY(50px);
+    }
+    .badges { display: flex; gap: 15px; }
+    .badge { border: 2px solid #000; border-radius: 30px; padding: 8px 16px; }
+
+    /* === VINIL PLAYER === */
+    .right-side {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 25px;
+    }
+    .vinyl-container {
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #2a2a2a, #1a1a1a);
+      position: relative; overflow: hidden;
+      box-shadow: 0 0 25px rgba(0,0,0,0.4);
+      opacity: 0; transform: translateX(40px);
+    }
+    .vinyl-grooves {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      background: repeating-radial-gradient(circle at center,
+        transparent 0px, transparent 8px,
+        rgba(255,255,255,0.06) 8px, rgba(255,255,255,0.06) 10px);
+      animation: spin 20s linear infinite;
+    }
+    
+    /* Label do vinil com imagem da capa */
+    .vinyl-center {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid #000;
+      box-shadow: 0 0 12px rgba(0,0,0,0.5);
+      z-index: 2;
+    }
+    .vinyl-center img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    
+    /* FURO no meio do vinil */
+    .vinyl-hole {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #000;
+      box-shadow: 
+        inset 0 2px 4px rgba(0,0,0,0.8),
+        0 0 8px rgba(0,0,0,0.5);
+      z-index: 3;
+    }
+    
+    @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+    /* Controles agora ficam fora do vinil */
+    .music-controls {
+      display: flex; gap: 20px; justify-content: center;
+      align-items: center;
+    }
+    .music-controls button {
+      background: rgba(0,0,0,0.8); color: #c4f82a;
+      border-radius: 50%; width: 46px; height: 46px;
+      border: 2px solid #c4f82a; font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      transition: 0.3s; cursor: pointer;
+    }
+    .music-controls button:hover {
+      background: #c4f82a; color: #000;
+      transform: scale(1.1);
+    }
+
+    /* Volume Control */
+    .volume-control {
+      display: flex; align-items: center; gap: 8px;
+      position: relative;
+    }
+    .volume-slider {
+      width: 80px; height: 4px;
+      -webkit-appearance: none; appearance: none;
+      background: rgba(0,0,0,0.3); border-radius: 2px;
+      cursor: pointer; outline: none;
+    }
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #c4f82a; border: 2px solid #000;
+      cursor: pointer; transition: 0.2s;
+    }
+    .volume-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+    .volume-slider::-moz-range-thumb {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #c4f82a; border: 2px solid #000;
+      cursor: pointer; transition: 0.2s;
+    }
+    .volume-slider::-moz-range-track {
+      background: rgba(0,0,0,0.3); height: 4px; border-radius: 2px;
+    }
+
+    /* Info */
+    .music-info { text-align: center; max-width: 400px; }
+    .track-name { font-size: 18px; font-weight: bold; margin-top: 12px; }
+    .artist-name { font-size: 14px; font-style: italic; color: #333; margin-bottom: 12px; }
+    .description { font-size: 13px; line-height: 1.5; color: #444; }
+
+    /* Arrow circle */
+    .arrow-circle {
+      position: absolute; bottom: 180px; left: 50%; transform: translateX(-50%);
+      width: 80px; height: 80px; border-radius: 50%; background: #000;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0; z-index: 0;
+      transition: all 0.3s ease;
+    }
+    .arrow-circle::after { content: '↗'; color: #c4f82a; font-size: 26px; font-weight: bold; }
+    .arrow-circle:hover { transform: translateX(-50%) scale(1.1); }
+
+    /* Bottom strip */
+    .bottom-strip {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 150px;
+      background: #000; display: flex; align-items: center;
+      overflow: hidden; z-index: 10;
+    }
+    .scrolling-text {
+      white-space: nowrap;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 900; color: #c4f82a;
+      animation: moveText 20s linear infinite;
+      letter-spacing: 3px;
+    }
+    @keyframes moveText {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .main-content { flex-direction: column; align-items: center; padding: 120px 20px; }
+      .right-side { gap: 20px; }
+      .vinyl-container { width: 200px; height: 200px; }
+      .vinyl-center { width: 80px; height: 80px; }
+      .vinyl-hole { width: 14px; height: 14px; }
+      .music-controls button { width: 38px; height: 38px; font-size: 12px; }
+      .music-controls { gap: 15px; flex-wrap: wrap; }
+      .volume-slider { width: 60px; }
+    }
+    @media (max-width: 480px) {
+      .vinyl-container { width: 160px; height: 160px; }
+      .vinyl-center { width: 70px; height: 70px; }
+      .vinyl-hole { width: 12px; height: 12px; }
+      .music-controls button { width: 34px; height: 34px; font-size: 11px; }
+      .track-name { font-size: 15px; }
+      .artist-name, .description { font-size: 12px; }
+      .volume-control { flex-direction: column; gap: 5px; }
+      .volume-slider { width: 100px; }
+    }
+  </style>
+
+  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://w.soundcloud.com/player/api.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">Das Grune</div>
+    <nav class="nav">
+      <a href="#about">ABOUT</a>
+      <a href="lineup.html">PROJECTS</a>
+      <a href="#services">SERVICES</a>
+      <a href="acessibilidade.html">LET'S TALK</a>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <section class="left-side">
+      <h1 class="main-title">DIGITIZE<br>IDEAS</h1>
+      <div class="badges">
+        <div class="badge">2022 Best Agency</div>
+        <div class="badge">World Class Agency</div>
+      </div>
+    </section>
+
+    <section class="right-side">
+      <!-- Vinil -->
+      <div class="vinyl-container">
+        <div class="vinyl-grooves"></div>
+        <div class="vinyl-center">
+          <img id="trackImage" src="https://i1.sndcdn.com/artworks-000000000000-0-t500x500.jpg" alt="Track Cover">
+        </div>
+        <!-- FURO no meio -->
+        <div class="vinyl-hole"></div>
+      </div>
+
+      <!-- Controles fora -->
+      <div class="music-controls">
+        <button id="prev" title="Previous"><i class="fas fa-backward"></i></button>
+        <button id="play" title="Play/Pause"><i class="fas fa-play" id="playIcon"></i></button>
+        <button id="next" title="Next"><i class="fas fa-forward"></i></button>
+        
+        <!-- Volume Control -->
+        <div class="volume-control">
+          <i class="fas fa-volume-down" style="font-size: 12px; color: #666;"></i>
+          <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="80">
+          <i class="fas fa-volume-up" style="font-size: 12px; color: #666;"></i>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="music-info">
+        <div class="track-name" id="trackName">Mellow Sunrise</div>
+        <div class="artist-name" id="artistName">Forss</div>
+        <div class="description" id="trackDescription">Smooth electronic vibes that transport you to another dimension.</div>
+      </div>
+    </section>
+  </main>
+
+  <button href="https://aesthetics.fandom.com/wiki/Aesthetics_Wiki"><div class="arrow-circle" ></div></button>
+
+  <!-- Bottom strip -->
+  <section class="bottom-strip">
+    <div class="scrolling-text">
+      VENHA FUDER SUA VIDA — VENHA FUDER SUA VIDA — VENHA FUDER SUA VIDA —
+    </div>
+  </section>
+
+  <!-- SoundCloud player invisível -->
+  <iframe id="sc-player" width="0" height="0" frameborder="no" allow="autoplay" style="display: none;"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/293&auto_play=false">
+  </iframe>
+
+  <script>
+    // Animações
+    gsap.to(".header", {opacity: 1, duration: 1});
+    gsap.to(".main-title", {opacity: 1, y: 0, duration: 1, delay: 0.3});
+    gsap.to(".vinyl-container", {opacity: 1, x: 0, duration: 1, delay: 0.6});
+    gsap.to(".arrow-circle", {opacity: 1, duration: 1, delay: 1});
+
+    // Player Elements
+    const widget = SC.Widget(document.getElementById("sc-player"));
+    const playBtn = document.getElementById("play");
+    const icon = document.getElementById("playIcon");
+    const prevBtn = document.getElementById("prev");
+    const nextBtn = document.getElementById("next");
+    const trackImage = document.getElementById("trackImage");
+    const trackName = document.getElementById("trackName");
+    const artistName = document.getElementById("artistName");
+    const trackDesc = document.getElementById("trackDescription");
+    const grooves = document.querySelector(".vinyl-grooves");
+    const volumeSlider = document.getElementById("volumeSlider");
+
+    let isPlaying = false, trackIndex = 0;
+    
+    const tracks = [
+      {
+        url: "https://api.soundcloud.com/tracks/293",
+        name: "Mellow Sunrise",
+        artist: "Forss",
+        description: "Smooth electronic vibes that transport you to another dimension.",
+        cover: "https://i1.sndcdn.com/artworks-000000000000-0-t500x500.jpg"
+      },
+      {
+        url: "https://api.soundcloud.com/tracks/1123049251",
+        name: "YaSuKe 弥助",
+        artist: "Sim Production", 
+        description: "Futuristic soundscape blending traditional and modern elements.",
+        cover: "https://i1.sndcdn.com/artworks-WQGncTCPSeYOVdtC-Ucf2zg-t500x500.jpg"
+      },
+      {
+        url: "https://api.soundcloud.com/tracks/1967183415",
+        name: "Swamp Festival",
+        artist: "DJ Gator AIDS",
+        description: "Underground electronic beats with experimental sound design.",
+        cover: "https://i1.sndcdn.com/artworks-WcVRnt3QHm0mzgp3-8O03yw-t500x500.jpg"
+      }
+    ];
+
+    // Widget ready event
+    widget.bind(SC.Widget.Events.READY, () => {
+      console.log('SoundCloud Widget ready!');
+      loadTrack(trackIndex);
+      widget.setVolume(volumeSlider.value / 100);
+    });
+
+    function loadTrack(i, auto = false) {
+      const t = tracks[i];
+      console.log('Loading track:', t.name);
+      
+      widget.load(t.url, { 
+        auto_play: auto,
+        show_artwork: false,
+        hide_related: true,
+        show_comments: false,
+        show_user: false
+      });
+      
+      // Update UI
+      trackName.textContent = t.name;
+      artistName.textContent = t.artist;
+      trackDesc.textContent = t.description;
+      trackImage.src = t.cover;
+      
+      // Smooth animation
+      gsap.fromTo([trackName, artistName, trackDesc, trackImage], 
+        { opacity: 0, y: 10 }, 
+        { opacity: 1, y: 0, duration: 0.4, stagger: 0.1 }
+      );
+    }
+
+    // Play/Pause
+    playBtn.addEventListener("click", () => {
+      console.log('Play button clicked, isPlaying:', isPlaying);
+      if (isPlaying) {
+        widget.pause();
+      } else {
+        widget.play();
+      }
+    });
+
+    // Previous track
+    prevBtn.addEventListener("click", () => {
+      console.log('Previous button clicked');
+      trackIndex = (trackIndex - 1 + tracks.length) % tracks.length;
+      loadTrack(trackIndex, true);
+    });
+
+    // Next track  
+    nextBtn.addEventListener("click", () => {
+      console.log('Next button clicked');
+      trackIndex = (trackIndex + 1) % tracks.length;
+      loadTrack(trackIndex, true);
+    });
+
+    // Widget events
+    widget.bind(SC.Widget.Events.PLAY, () => {
+      console.log('Track playing');
+      isPlaying = true;
+      icon.classList.remove("fa-play");
+      icon.classList.add("fa-pause");
+      grooves.style.animationPlayState = "running";
+    });
+
+    widget.bind(SC.Widget.Events.PAUSE, () => {
+      console.log('Track paused');
+      isPlaying = false;
+      icon.classList.remove("fa-pause");
+      icon.classList.add("fa-play");
+      grooves.style.animationPlayState = "paused";
+    });
+
+    widget.bind(SC.Widget.Events.FINISH, () => {
+      console.log('Track finished, playing next');
+      trackIndex = (trackIndex + 1) % tracks.length;
+      loadTrack(trackIndex, true);
+    });
+
+    // Volume Control
+    volumeSlider.addEventListener('input', (e) => {
+      const volume = e.target.value / 100;
+      console.log('Volume changed to:', volume);
+      widget.setVolume(volume);
+    });
+
+    // Initialize vinyl stopped
+    grooves.style.animationPlayState = "paused";
+
+    // Arrow circle hover effect
+    const arrowCircle = document.querySelector('.arrow-circle');
+    arrowCircle.addEventListener('mouseenter', () => {
+      gsap.to(arrowCircle, { scale: 1.1, duration: 0.3 });
+    });
+    arrowCircle.addEventListener('mouseleave', () => {
+      gsap.to(arrowCircle, { scale: 1, duration: 0.3 });
+    });
+    arrowCircle.addEventListener('click', () => {
+      gsap.to(arrowCircle, { rotation: "+=360", duration: 0.6, ease: "power2.out" });
+    });
+
+    // Fallback initialization
+    setTimeout(() => {
+      if (!isPlaying && trackIndex === 0) {
+        console.log('Fallback: Initializing track info');
+        loadTrack(trackIndex);
+      }
+    }, 2000);
+  </script>
+</body>
+</html>
