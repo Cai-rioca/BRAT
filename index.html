@@ -1,30 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Das Grune - Digitize Ideas</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-  <!-- Libs -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://w.soundcloud.com/player/api.js"></script>
 </head>
+
 <body>
   <header class="header">
     <div class="logo">Das Grune</div>
     <nav class="nav">
-      <a href="#about">ABOUT US</a>
-      <a href="#projects">PROJECTS</a>
+      <a href="#about">ABOUT</a>
+      <a href="lineup.html">PROJECTS</a>
       <a href="#services">SERVICES</a>
-      <a href="#contact">LET'S TALK</a>
+      <a href="acessibilidade.html">LET'S TALK</a>
     </nav>
+    <div class="hamburger"><span></span><span></span><span></span></div>
   </header>
 
   <main class="main-content">
@@ -37,35 +32,39 @@
     </section>
 
     <section class="right-side">
-      <div class="video-player">
-        <!-- Conteúdo central -->
-        <div class="video-content">
-          <div class="wave-pattern"></div>
+      <!-- Vinil -->
+      <div class="vinyl-container">
+        <div class="vinyl-grooves"></div>
+        <div class="vinyl-center">
+          <img id="trackImage" src="https://i1.sndcdn.com/artworks-000000000000-0-t500x500.jpg" alt="Track Cover">
+        </div>
+        <div class="vinyl-hole"></div>
+      </div>
 
-          <!-- iframe invisível -->
-          <iframe id="sc-player" width="0" height="0" frameborder="no" allow="autoplay"
-            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/293&auto_play=false&hide_related=false&show_comments=false&show_user=false&show_reposts=false&visual=false">
-          </iframe>
-
-          <!-- Controles -->
-          <div class="music-controls">
-            <button id="prev"><i class="fas fa-backward"></i></button>
-            <button id="play"><i class="fas fa-play" id="playIcon"></i></button>
-            <button id="next"><i class="fas fa-forward"></i></button>
-            <button id="volume"><i class="fas fa-volume-up"></i></button>
-            <input type="range" id="volumeSlider" min="0" max="100" value="100">
-          </div>
+      <!-- Controles fora -->
+      <div class="music-controls">
+        <button id="prev" title="Previous"><i class="fas fa-backward"></i></button>
+        <button id="play" title="Play/Pause"><i class="fas fa-play" id="playIcon"></i></button>
+        <button id="next" title="Next"><i class="fas fa-forward"></i></button>
+        <div class="volume-control">
+          <i class="fas fa-volume-down" style="font-size: 12px; color: #666;"></i>
+          <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="80">
+          <i class="fas fa-volume-up" style="font-size: 12px; color: #666;"></i>
         </div>
       </div>
-      <p class="description">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Inventore,
-        assumenda alias. Reiciendis nobis ea sint quibusdam, doloremque magnam
-        natus amet.
-      </p>
+
+      <!-- Info -->
+      <div class="music-info">
+        <div class="track-name" id="trackName">Mellow Sunrise</div>
+        <div class="artist-name" id="artistName">Forss</div>
+        <div class="description" id="trackDescription">Smooth electronic vibes that transport you to another dimension.
+        </div>
+      </div>
     </section>
   </main>
 
-  <div class="arrow-circle"></div>
+  <!-- Arrow circle link -->
+  <a href="https://pt.wikipedia.org/wiki/Wikip%C3%A9dia" target="_blank" class="arrow-circle"></a>
 
   <section class="bottom-strip">
     <div class="scrolling-text">
@@ -73,6 +72,13 @@
     </div>
   </section>
 
+  <iframe id="sc-player" width="0" height="0" frameborder="no" allow="autoplay" style="display: none;"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/293&auto_play=false">
+  </iframe>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://w.soundcloud.com/player/api.js"></script>
   <script src="script.js"></script>
 </body>
+
 </html>

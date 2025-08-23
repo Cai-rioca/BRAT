@@ -1,108 +1,151 @@
-// --------------------
-// GSAP ANIMAÇÕES
-// --------------------
-gsap.set(
-    [".main-title", ".badges", ".video-player", ".description", ".arrow-circle", ".header"],
-    { opacity: 0 }
-  );
-  
-  const timeline = gsap.timeline({ delay: 0.3 });
-  timeline
-    .to(".header", { opacity: 1, duration: 0.8, ease: "power2.out" })
-    .to(".main-title", { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }, "-=0.4")
-    .to(".badges", { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.6")
-    .to(".video-player", { opacity: 1, x: 0, duration: 1, ease: "power2.out" }, "-0.5")
-    .to(".description", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, "-=0.3")
-    .to(".arrow-circle", { opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.7)" }, "-=0.2");
-  
-  // --------------------
-  // ELEMENTOS
-  // --------------------
-  const arrowBtn = document.querySelector(".arrow-circle");
+// Animações iniciais com GSAP
+gsap.to(".header", { opacity: 1, duration: 1 });
+gsap.to(".main-title", { opacity: 1, y: 0, duration: 1, delay: 0.3 });
+gsap.to(".vinyl-container", { opacity: 1, x: 0, duration: 1, delay: 0.6 });
+gsap.to(".arrow-circle", { opacity: 1, duration: 1, delay: 1 });
+
+// Aguarda o SoundCloud SDK carregar
+function initializePlayer() {
+  if (typeof SC === 'undefined') {
+    console.log('SoundCloud SDK not loaded, retrying...');
+    setTimeout(initializePlayer, 500);
+    return;
+  }
+
   const widget = SC.Widget(document.getElementById("sc-player"));
+  const playBtn = document.getElementById("play");
+  const icon = document.getElementById("playIcon");
   const prevBtn = document.getElementById("prev");
   const nextBtn = document.getElementById("next");
-  const musicPlayBtn = document.getElementById("play");
-  const icon = document.getElementById("playIcon");
-  const volumeBtn = document.getElementById("volume");
+  const trackImage = document.getElementById("trackImage");
+  const trackName = document.getElementById("trackName");
+  const artistName = document.getElementById("artistName");
+  const trackDesc = document.getElementById("trackDescription");
+  const grooves = document.querySelector(".vinyl-grooves");
+  const vinylImg = document.querySelector(".vinyl-center img");
   const volumeSlider = document.getElementById("volumeSlider");
-  
-  // --------------------
-  // BOTÕES HOVER
-  // --------------------
-  arrowBtn.addEventListener("mouseenter", () =>
-    gsap.to(arrowBtn, { scale: 1.1, duration: 0.3 })
-  );
-  arrowBtn.addEventListener("mouseleave", () =>
-    gsap.to(arrowBtn, { scale: 1, duration: 0.3 })
-  );
-  
-  // Clique com rotação
-  arrowBtn.addEventListener("click", () => {
-    gsap.to(arrowBtn, { rotation: "+=360", duration: 0.6, ease: "power2.out" });
-  });
-  
-  // Efeito parallax no scroll
-  window.addEventListener("scroll", () => {
-    const scrolled = window.pageYOffset;
-    gsap.to(arrowBtn, { y: scrolled * 0.3, duration: 0.3 });
-  });
-  
-  // --------------------
-  // SOUND CLOUD PLAYER
-  // --------------------
-  let isPlaying = false;
-  let trackIndex = 0;
-  
+
+  let isPlaying = false, trackIndex = 0;
+
   const tracks = [
-    "https://api.soundcloud.com/tracks/293",
-    "https://api.soundcloud.com/tracks/1123049251",
-    "https://api.soundcloud.com/tracks/1967183415",
+    { 
+      url: "https://api.soundcloud.com/tracks/293", 
+      name: "Mellow Sunrise", 
+      artist: "Forss", 
+      description: "Smooth electronic vibes that transport you to another dimension.", 
+      cover: "https://i1.sndcdn.com/artworks-000000000000-0-t500x500.jpg" 
+    },
+    { 
+      url: "https://api.soundcloud.com/tracks/1123049251", 
+      name: "YaSuKe 弥助", 
+      artist: "Sim Production", 
+      description: "Futuristic soundscape blending traditional and modern elements.", 
+      cover: "https://i1.sndcdn.com/artworks-WQGncTCPSeYOVdtC-Ucf2zg-t500x500.jpg" 
+    },
+    { 
+      url: "https://api.soundcloud.com/tracks/1967183415", 
+      name: "Swamp Festival", 
+      artist: "DJ Gator AIDS", 
+      description: "Underground electronic beats with experimental sound design.", 
+      cover: "https://i1.sndcdn.com/artworks-WcVRnt3QHm0mzgp3-8O03yw-t500x500.jpg" 
+    }
   ];
-  
-  function loadTrack(i, autoplay = false) {
-    widget.load(tracks[i], { auto_play: autoplay, show_artwork: false });
+
+  // Quando o widget estiver pronto
+  widget.bind(SC.Widget.Events.READY, () => {
+    loadTrack(trackIndex);
+    widget.setVolume(volumeSlider.value / 100);
+  });
+
+  // Função para carregar uma faixa
+  function loadTrack(i, auto = false) {
+    const t = tracks[i];
+    widget.load(t.url, { 
+      auto_play: auto, 
+      show_artwork: false, 
+      hide_related: true, 
+      show_comments: false, 
+      show_user: false 
+    });
+    trackName.textContent = t.name;
+    artistName.textContent = t.artist;
+    trackDesc.textContent = t.description;
+    trackImage.src = t.cover;
+    gsap.fromTo([trackName, artistName, trackDesc, trackImage], 
+      { opacity: 0, y: 10 }, 
+      { opacity: 1, y: 0, duration: 0.4, stagger: 0.1 }
+    );
   }
-  loadTrack(trackIndex);
-  
-  // play/pause
-  musicPlayBtn.addEventListener("click", () => {
+
+  // Event listeners dos controles
+  playBtn.addEventListener("click", () => {
     if (isPlaying) widget.pause();
     else widget.play();
   });
-  
-  // prev
-  prevBtn.addEventListener("click", () => {
-    trackIndex = (trackIndex - 1 + tracks.length) % tracks.length;
-    loadTrack(trackIndex, true);
+
+  prevBtn.addEventListener("click", () => { 
+    trackIndex = (trackIndex - 1 + tracks.length) % tracks.length; 
+    loadTrack(trackIndex, true); 
   });
-  
-  // next
-  nextBtn.addEventListener("click", () => {
-    trackIndex = (trackIndex + 1) % tracks.length;
-    loadTrack(trackIndex, true);
+
+  nextBtn.addEventListener("click", () => { 
+    trackIndex = (trackIndex + 1) % tracks.length; 
+    loadTrack(trackIndex, true); 
   });
-  
-  // troca ícone play/pause
+
+  // Event listeners do SoundCloud widget
   widget.bind(SC.Widget.Events.PLAY, () => {
     isPlaying = true;
     icon.classList.replace("fa-play", "fa-pause");
+    grooves.style.animationPlayState = "running";
+    vinylImg.style.animationPlayState = "running";
   });
+
   widget.bind(SC.Widget.Events.PAUSE, () => {
     isPlaying = false;
     icon.classList.replace("fa-pause", "fa-play");
+    grooves.style.animationPlayState = "paused";
+    vinylImg.style.animationPlayState = "paused";
   });
-  
-  // --------------------
-  // VOLUME
-  // --------------------
-  volumeBtn.addEventListener("click", () => {
-    volumeSlider.style.display =
-      volumeSlider.style.display === "block" ? "none" : "block";
+
+  widget.bind(SC.Widget.Events.FINISH, () => { 
+    trackIndex = (trackIndex + 1) % tracks.length; 
+    loadTrack(trackIndex, true); 
   });
-  
-  volumeSlider.addEventListener("input", (e) => {
-    const vol = e.target.value / 100;
-    widget.setVolume(vol);
+
+  // Controle de volume
+  volumeSlider.addEventListener('input', (e) => { 
+    widget.setVolume(e.target.value / 100); 
   });
-  
+
+  // Inicializa com animações pausadas
+  grooves.style.animationPlayState = "paused";
+  vinylImg.style.animationPlayState = "paused";
+}
+
+// Inicializa quando a página carregar
+window.addEventListener('load', initializePlayer);
+
+// Se já carregou, tenta inicializar imediatamente
+if (document.readyState === 'complete') {
+  initializePlayer();
+}
+
+// MENU BURGER - funciona independentemente do SoundCloud
+const hamburger = document.querySelector(".hamburger");
+const nav = document.querySelector(".nav");
+hamburger.addEventListener("click", () => { 
+  nav.classList.toggle("active"); 
+});
+
+// Arrow hover - funciona independentemente do SoundCloud
+const arrowCircle = document.querySelector('.arrow-circle');
+arrowCircle.addEventListener('mouseenter', () => { 
+  gsap.to(arrowCircle, { scale: 1.1, duration: 0.3 }); 
+});
+arrowCircle.addEventListener('mouseleave', () => { 
+  gsap.to(arrowCircle, { scale: 1, duration: 0.3 }); 
+});
+arrowCircle.addEventListener('click', () => { 
+  gsap.to(arrowCircle, { rotation: "+=360", duration: 0.6, ease: "power2.out" }); 
+});
