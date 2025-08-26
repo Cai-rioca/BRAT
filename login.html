@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+<title>NeoAkasha</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Quicksand",sans-serif;background:url("img/Mashup.png") no-repeat center center fixed;background-size:cover;min-height:100vh;display:flex;justify-content:center;align-items:center;position:relative;color:#000;overflow:hidden;}
+body::before{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,128,0,0.2);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);z-index:0;}
+
+section{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:480px;min-height:400px;background:rgba(0,0,0,0.6);border-radius:20px;padding:3rem 2rem;display:flex;flex-direction:column;align-items:center;gap:2rem;box-shadow:0 20px 40px rgba(0,0,0,0.3);border:2px solid rgba(196,248,42,0.2);opacity:0;pointer-events:none;transition:opacity 0.5s ease;}
+section.active{opacity:1;pointer-events:auto;}
+.logo a{font-family:"Anton",sans-serif;font-size:2.5rem;color:#c4f82a;font-weight:700;letter-spacing:2px;text-decoration:none;text-shadow:2px 2px 8px rgba(196,248,42,0.8);}
+form{width:100%;display:flex;flex-direction:column;gap:1.5rem;}
+.inputBx input{width:100%;padding:15px 20px;background:transparent;border:2px solid rgba(196,248,42,0.3);border-radius:50px;font-size:1.1em;color:#c4f82a;outline:none;transition:all 0.3s ease;}
+.inputBx input:focus{border-color:#c4f82a;box-shadow:0 0 20px rgba(196,248,42,0.4);}
+.inputBx input[type="submit"]{background:#c4f82a;border:2px solid #c4f82a;color:#000;cursor:pointer;font-weight:700;font-size:1.2em;margin-top:1rem;text-transform:uppercase;transition:0.3s;}
+.inputBx input[type="submit"]:hover{background:transparent;color:#c4f82a;box-shadow:0 10px 25px rgba(196,248,42,0.5);}
+.links{display:flex;justify-content:space-between;width:100%;padding:0 5px;}
+.links a{color:rgba(196,248,42,0.8);text-decoration:none;font-size:0.9em;font-weight:500;transition:all 0.3s ease;cursor:pointer;}
+.links a:hover{color:#c4f82a;}
+.social-buttons{display:flex;gap:1rem;width:100%;margin-top:1rem;}
+.social-btn{flex:1;display:flex;align-items:center;justify-content:center;padding:15px;background:transparent;border:2px solid rgba(196,248,42,0.3);border-radius:50px;cursor:pointer;transition:all 0.3s ease;font-size:1.2rem;color:#c4f82a;}
+.social-btn:hover{border-color:#c4f82a;background:rgba(196,248,42,0.1);box-shadow:0 8px 25px rgba(196,248,42,0.2);}
+
+/* Breadcrumb */
+.breadcrumb{position:absolute;top:15px;left:15px;color:#c4f82a;font-weight:500;font-size:0.95rem;z-index:2;}
+.breadcrumb a{color:#c4f82a;text-decoration:none;transition:all 0.3s;}
+.breadcrumb a:hover{text-decoration:underline;}
+
+@media(max-width:768px){section{width:90%;padding:2rem 1.5rem;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<section id="login" class="active">
+    <div class="breadcrumb"><a href="index.html">Home</a> &gt; Login</div>
+    <div class="logo"><a href="#">NeoAkasha</a></div>
+    <form>
+        <div class="inputBx"><input type="email" placeholder="Email" required></div>
+        <div class="inputBx"><input type="password" placeholder="Senha" required></div>
+        <div class="links">
+            <a onclick="showSection('forgot')">Esqueceu a senha?</a>
+            <a onclick="showSection('signup')">Criar conta</a>
+        </div>
+        <div class="inputBx"><input type="submit" value="Entrar"></div>
+    </form>
+    <div class="social-buttons">
+        <button class="social-btn google"><i class="fa-brands fa-google"></i></button>
+        <button class="social-btn github"><i class="fa-brands fa-github"></i></button>
+        <button class="social-btn facebook"><i class="fa-brands fa-facebook-f"></i></button>
+    </div>
+</section>
+
+<!-- FORGOT PASSWORD -->
+<section id="forgot">
+    <div class="breadcrumb"><a href="index.html">Home</a> &gt; Esqueceu a Senha</div>
+    <div class="logo"><a href="#">NeoAkasha</a></div>
+    <form>
+        <div class="inputBx"><input type="email" placeholder="Digite seu email" required></div>
+        <div class="inputBx"><input type="submit" value="Enviar link"></div>
+        <div class="links"><a onclick="showSection('login')">⬅ Voltar</a></div>
+    </form>
+</section>
+
+<!-- SIGNUP -->
+<section id="signup">
+    <div class="breadcrumb"><a href="index.html">Home</a> &gt; Criar Conta</div>
+    <div class="logo"><a href="#">NeoAkasha</a></div>
+    <form>
+        <div class="inputBx"><input type="text" placeholder="Nome completo" required></div>
+        <div class="inputBx"><input type="email" placeholder="Email" required></div>
+        <div class="inputBx"><input type="password" placeholder="Senha" required></div>
+        <div class="inputBx"><input type="password" placeholder="Confirmar Senha" required></div>
+        <div class="inputBx"><input type="submit" value="Cadastrar"></div>
+        <div class="links"><a onclick="showSection('login')">⬅ Voltar</a></div>
+    </form>
+</section>
+
+<script>
+function showSection(id){
+    document.querySelectorAll('section').forEach(sec=>sec.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+</script>
+
+</body>
+</html>
