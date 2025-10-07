@@ -1,0 +1,53 @@
+<main class="main-content">
+  <section class="left-side">
+    <h1 class="main-title">DIGITIZE<br>IDEAS</h1>
+    <div class="badges">
+      <div class="badge"><a routerLink="post">music</a></div>
+    </div>
+  </section>
+
+  <section class="right-side">
+    <div class="vinyl-container">
+      <div class="vinyl-grooves" [class.playing]="isPlaying"></div>
+      <div class="vinyl-center">
+        <img [src]="currentTrack.cover" alt="Track Cover" [class.playing]="isPlaying">
+      </div>
+      <div class="vinyl-hole"></div>
+    </div>
+
+    <div class="music-controls">
+      <button (click)="prevTrack()" title="Previous"><i class="fas fa-backward"></i></button>
+      <button (click)="togglePlayPause()" title="Play/Pause">
+        <i class="fas" [class.fa-play]="!isPlaying" [class.fa-pause]="isPlaying"></i>
+      </button>
+      <button (click)="nextTrack()" title="Next"><i class="fas fa-forward"></i></button>
+      <div class="volume-control">
+        <i class="fas fa-volume-down"></i>
+        <input type="range" class="volume-slider" min="0" max="100" [value]="currentVolume" (input)="onVolumeChange($event)">
+        <i class="fas fa-volume-up"></i>
+      </div>
+    </div>
+
+    
+    <div class="music-info">
+      <div class="track-name">{{ currentTrack.name }}</div>
+      <div class="artist-name">{{ currentTrack.artist }}</div>
+      <div class="description">{{ currentTrack.description }}</div>
+    </div>
+
+
+    <a href="https://aesthetics.fandom.com/wiki/Aesthetics_Wiki" target="_blank" class="arrow-circle"></a>
+
+    <iframe #vinilPlayer
+      id="sc-player"
+      width="0"
+      height="0"
+      frameborder="no"
+
+      allow="autoplay"
+      style="display:none;"
+      [src]="safeUrlForInitialTrack">
+    </iframe>
+
+  </section>
+</main>

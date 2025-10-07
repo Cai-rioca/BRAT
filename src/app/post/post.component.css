@@ -1,0 +1,189 @@
+:host {
+    display: block;
+    font-family: 'Poppins', sans-serif;
+    background-color: #c4f82a;
+    color: #121212;
+    min-height: calc(100vh - 160px); /* ajusta pra não cobrir header/footer */
+    padding: 120px 24px 80px; /* dá espaço pro header e footer */
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Container para centralizar o conteúdo */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  /* Estilos do Cabeçalho */
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  
+  .title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    margin: 0;
+  }
+  
+  .subtitle {
+    max-width: 450px;
+    margin: 16px auto 32px;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  /* Botões de Ação (Ver/Criar Post) */
+  .actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .actions button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: 2px solid #121212;
+    background-color: transparent;
+    color: #121212;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .actions button:hover,
+  .actions button.active {
+    background-color: #121212;
+    color: #c4f82a;
+    transform: translateY(-2px);
+  }
+  
+  /* Título das seções */
+  .section-title {
+    font-size: 2rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  /* Grid para os posts */
+  .posts-grid {
+    display: grid;
+    gap: 24px;
+  }
+  
+  /* Card de cada post */
+  .post-card {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .post-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 12px;
+  }
+  
+  .post-content {
+    margin: 0 0 20px;
+    line-height: 1.7;
+    color: #2D3748;
+  }
+  
+  .post-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: #4A5568;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 16px;
+  }
+  
+  /* Estilos do Formulário */
+  .form-container {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 32px;
+    border-radius: 12px;
+    max-width: 672px;
+    margin: 0 auto;
+  }
+  
+  .form-group {
+    margin-bottom: 24px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.4);
+    box-sizing: border-box;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #121212;
+  }
+  
+  .form-actions {
+    text-align: center;
+  }
+  
+  .submit-btn {
+    padding: 12px 32px;
+    border-radius: 8px;
+    border: none;
+    background-color: #121212;
+    color: #c4f82a;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .submit-btn:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Mensagem de erro */
+  .validation-message {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #e53e3e;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+  }
+  
+  /* Animação de entrada */
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  

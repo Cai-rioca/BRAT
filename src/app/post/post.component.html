@@ -1,0 +1,89 @@
+<!-- Container Principal -->
+<div class="container">
+
+    <!-- Cabeçalho -->
+    <header class="header">
+      <h1 class="title">LET'S POST</h1>
+      <p class="subtitle">
+        Compartilhe suas ideias, experiências e conecte-se com a comunidade. Sem necessidade de login, apenas sua criatividade.
+      </p>
+  
+      <div class="actions">
+        <button (click)="switchView('posts')" [class.active]="currentView() === 'posts'">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span>VER POSTS</span>
+        </button>
+  
+        <button (click)="switchView('create')" [class.active]="currentView() === 'create'">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"></path>
+          </svg>
+          <span>CRIAR POST</span>
+        </button>
+      </div>
+    </header>
+  
+    <main>
+      <!-- Seção de Criar Post -->
+      @if (currentView() === 'create') {
+        <section class="fade-in">
+          <h2 class="section-title">Crie uma nova publicação</h2>
+          <form (ngSubmit)="handlePostSubmit()" class="form-container">
+            <div class="form-group">
+              <label for="post-title">Título</label>
+              <input type="text" id="post-title" name="post-title" placeholder="Um título impactante"
+                required [ngModel]="postTitle()" (ngModelChange)="postTitle.set($event)">
+            </div>
+            <div class="form-group">
+              <label for="post-author">Seu nome</label>
+              <input type="text" id="post-author" name="post-author" placeholder="Como podemos te creditar?"
+                required [ngModel]="postAuthor()" (ngModelChange)="postAuthor.set($event)">
+            </div>
+            <div class="form-group">
+              <label for="post-content">Sua mensagem</label>
+              <textarea id="post-content" name="post-content" rows="6"
+                placeholder="Escreva sua ideia, dúvida ou sugestão aqui..."
+                required [ngModel]="postContent()" (ngModelChange)="postContent.set($event)"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="submit-btn">Publicar</button>
+            </div>
+          </form>
+        </section>
+      } @else {
+        <!-- Seção de Publicações -->
+        <section class="fade-in">
+          <h2 class="section-title">Últimas publicações</h2>
+          <div class="posts-grid">
+            @for (post of posts(); track post.title) {
+              <article class="post-card">
+                <h3>{{ post.title }}</h3>
+                <p class="post-content">{{ post.content }}</p>
+                <footer class="post-meta">
+                  <span>Por: {{ post.author }}</span>
+                  <span>Publicado em: {{ post.date }}</span>
+                </footer>
+              </article>
+            }
+          </div>
+        </section>
+      }
+    </main>
+  </div>
+  
+  <!-- Mensagem de Validação -->
+  @if (showValidationMessage()) {
+    <div class="validation-message fade-in">
+      Por favor, preencha todos os campos.
+    </div>
+  }
+  

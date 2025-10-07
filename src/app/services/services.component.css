@@ -1,0 +1,141 @@
+/* Bloqueia scroll da página inteira */
+:host, body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* página não rola */
+}
+
+/* Container principal respeitando header/footer */
+.services-container {
+  display: flex;
+  gap: 50px; /* espaçamento maior entre left e right panel */
+  padding: 160px 50px 80px; /* espaço topo pro header */
+  box-sizing: border-box;
+  min-height: calc(100vh - 200px); /* altura total menos header/footer */
+}
+
+/* Lado esquerdo */
+.left-panel {
+  flex: 0 0 35%;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  justify-content: flex-start;
+}
+
+/* Título estilo home */
+.left-panel .titulo {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(3rem, 5vw, 4rem);
+  line-height: 1;
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: 20px;
+}
+
+/* Barra de busca */
+.left-panel .busca input {
+  padding: 12px 16px;
+  border: 2px solid #000;
+  border-radius: 30px; /* igual aos badges antigos */
+  font-size: 1rem;
+  font-family: 'Anton', sans-serif;
+  outline: none;
+  width: 100%;
+  background: transparent;
+  color: #000;
+  transition: background 0.3s;
+}
+.left-panel .busca input:focus {
+  background: rgba(0,0,0,0.05);
+}
+
+/* Botões de filtro estilo antigo */
+.left-panel .filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+.left-panel .filtros button {
+  padding: 12px 25px;
+  background: #111;
+  color: #c4f82a;
+  font-weight: bold;
+  border: 2px solid #111;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: 'Anton', sans-serif;
+  transition: all 0.2s ease;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.4);
+  border-radius: 8px;
+}
+.left-panel .filtros button:active,
+.left-panel .filtros button.active {
+  transform: translate(2px,2px);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+  background: #c4f82a;
+  color: #000;
+  border-color: #000;
+}
+
+/* Lado direito: cards */
+.right-panel {
+  flex: 1;
+  max-height: calc(100vh - 200px); /* altura máxima dentro do container */
+  overflow-y: auto; /* scroll só aqui */
+  padding-left: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+/* Scroll personalizado */
+.right-panel::-webkit-scrollbar {
+  width: 8px;
+}
+.right-panel::-webkit-scrollbar-track {
+  background: #000;
+}
+.right-panel::-webkit-scrollbar-thumb {
+  background-color: #c4f82a;
+  border-radius: 4px;
+}
+
+/* Cards */
+.card {
+  background: #222;
+  color: #f0f0f0;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* Tipos e links */
+.card h3, .card .link { color: #c4f82a; }
+.card .tipo { font-size: 0.9rem; text-transform: uppercase; margin: 8px 0; }
+.card .link { text-decoration: underline; }
+
+/* Sem resultados */
+.sem-resultados {
+  font-size: 1.2rem;
+  text-align: center;
+  grid-column: 1 / -1;
+  color: #000;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 1024px) {
+  .services-container {
+    flex-direction: column;
+    padding: 140px 20px 80px;
+  }
+  .left-panel { flex: 1; }
+  .right-panel { max-height: 60vh; padding-left: 0; }
+}

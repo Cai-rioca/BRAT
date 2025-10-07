@@ -1,0 +1,45 @@
+
+<!-- Timeline Section -->
+<section class="timeline-container" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+
+  <div class="timeline-wrapper">
+    <div class="timeline-track" #timelineTrack>
+      <!-- Timeline Items -->
+      <div 
+        *ngFor="let decade of decadeData; let i = index" 
+        class="timeline-item"
+        [class.active]="i === currentIndex"
+        [attr.data-decade]="decade.id">
+        
+        <div class="decade-number">{{ decade.number }}</div>
+        <h2 class="decade-title">{{ decade.title }}</h2>
+        
+        <div class="image-container">
+          <img 
+            [src]="decade.image" 
+            [alt]="'Fashion ' + decade.number" 
+            class="decade-image">
+        </div>
+        
+        <p class="decade-description">
+          {{ decade.description }}
+        </p>
+        
+        <div class="fashion-trends">
+          <span 
+            *ngFor="let trend of decade.trends" 
+            class="trend-badge">
+            {{ trend }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="timeline-nav">
+      <button class="nav-btn prev" (click)="prevSlide()" [disabled]="isPrevDisabled">‹</button>
+      <div class="timeline-dots" #timelineDots></div>
+      <button class="nav-btn next" (click)="nextSlide()" [disabled]="isNextDisabled">›</button>
+    </div>
+  </div>
+</section>
