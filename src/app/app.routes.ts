@@ -5,6 +5,8 @@ import { ServicesComponent } from './services/services.component';
 import { LetsTalkComponent } from './lets-talk/lets-talk.component';
 import { AboutComponent } from './about/about.component';
 import { PostComponent } from './post/post.component';
+import { PrivComponent } from './components/priv/priv.component';
+import { TermsComponent } from './components/terms/terms.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +32,14 @@ export const routes: Routes = [
   {
     path: 'post',
     component: PostComponent
+  },
+    {
+    path: 'priv',
+    component: PrivComponent
+  },
+  {
+    path: 'terms',
+    component: TermsComponent
   }
 ];
 

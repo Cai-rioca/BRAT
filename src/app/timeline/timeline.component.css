@@ -20,7 +20,7 @@
   position: relative;
   overflow: hidden;
 
-  min-height: calc(100vh - 70px); /* 70px = altura do header aprox */
+  min-height: calc(100vh - 70px); /* aprox do header */
   box-sizing: border-box;
 }
 
@@ -304,7 +304,7 @@
   }
 }
 
-/* Accessibility */
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -315,7 +315,7 @@
   }
 }
 
-/* Focus states for keyboard navigation */
+
 .nav-btn:focus {
   outline: 3px solid #c4f82a;
   outline-offset: 2px;

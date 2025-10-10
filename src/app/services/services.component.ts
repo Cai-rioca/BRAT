@@ -30,16 +30,16 @@ export class ServicesComponent {
 
   lojas: Loja[] = [
     { nome: "Estilo Retrô", tipo: "brecho", endereco: "Rua Tal, 123" },
-    { nome: "Bazar Popular", tipo: "bazaar", endereco: "Av. Principal, 456" },
+    { nome: "Bazar Popular", tipo: "bazar", endereco: "Av. Principal, 456" },
     { nome: "Fashion Plus", tipo: "completa", endereco: "Rua X, 789" },
     { nome: "Trend Online", tipo: "online", link: "https://trend.com" },
     { nome: "Garimpo Ipanema", tipo: "brecho", endereco: "Rua Visconde de Pirajá, 100" },
-    { nome: "Bazar da Lapa", tipo: "bazaar", endereco: "Arcos da Lapa, stand 5" },
+    { nome: "Bazar da Lapa", tipo: "bazar", endereco: "Arcos da Lapa, stand 5" },
     { nome: "Marola Completa", tipo: "completa", endereco: "Posto 9, Ipanema" },
     { nome: "Carioca Clicks", tipo: "online", link: "https://cariocaclicks.com" },
     { nome: "Achados da Urca", tipo: "brecho", endereco: "Pista Cláudio Coutinho, 333" },
     { nome: "Cyber Vintage", tipo: "brecho", endereco: "Av. Digital, 2000" },
-    { nome: "Neo Bazaar", tipo: "bazaar", endereco: "Rua Futura, 404" }
+    { nome: "Neo Bazaar", tipo: "bazar", endereco: "Rua Futura, 404" }
   ];
 
   get lojasFiltradas(): Loja[] {

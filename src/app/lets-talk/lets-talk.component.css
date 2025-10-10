@@ -137,10 +137,10 @@
     }
   
     textarea {
-      resize: none; /* Remove o 'puxador' de redimensionar */
-      scrollbar-width: none; /* Esconde o scroll no Firefox */
+      resize: none; 
+      scrollbar-width: none; 
   
-      /* Esconde o scroll no Chrome, Safari e Opera */
+      
       &::-webkit-scrollbar {
         display: none;
       }

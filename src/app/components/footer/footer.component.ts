@@ -33,15 +33,24 @@ export class FooterComponent implements OnInit, AfterViewInit {
           case '/':
             this.footerText = 'GRAVE, COURO & TAMBORZÃO';
             break;
-            case '/letstalk':
-              this.footerText = 'VENHA FALAR CO NÓIXX';
-              break;
-          case '/about':
-            this.footerText = 'SAIBA MAIS SOBRE NÓS';
+          case '/letstalk':
+            this.footerText = 'FALA COM A GENTE, SÓ NÃO LIGA A COBRAR';
             break;
-            case '/post':
-              this.footerText = 'FALE O QUE QUISER KKKKKK';
-              break;
+          case '/about':
+            this.footerText = 'NÃO É SOBRE VOCÊ, MAS SOBRE NÓS';
+            break;
+          case '/post':
+            this.footerText = 'PAPO QUENTE E CERVEJA GELADA';
+            break;
+          case '/priv':
+            this.footerText = 'VOCÊ DEVIA LER, MAS A GENTE SABE QUE NÃO VAI';
+            break;
+          case '/terms':
+            this.footerText = 'COOKIES?SÓ OS GOSTOSOS';
+            break;
+          case '/services':
+            this.footerText = 'É A BAHEA, NÉ PAI';
+            break;
           default:
             this.footerText = 'VENHA FUDER SUA VIDA';
         }
@@ -49,7 +58,7 @@ export class FooterComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-
+    
     this.scrollingText = this.el.nativeElement.querySelector('.scrolling-text');
 
     if (!this.scrollingText) return;
@@ -64,16 +73,4 @@ export class FooterComponent implements OnInit, AfterViewInit {
       this.renderer.setStyle(this.scrollingText, 'animationPlayState', 'running');
     }
   }
-
-
-  onMouseEnter(): void {
-    if (this.prefersReducedMotion || !this.scrollingText) return;
-    this.renderer.setStyle(this.scrollingText, 'animationPlayState', 'paused');
-  }
-
-  onMouseLeave(): void {
-    if (this.prefersReducedMotion || !this.scrollingText) return;
-    this.renderer.setStyle(this.scrollingText, 'animationPlayState', 'running');
-  }
 }
-

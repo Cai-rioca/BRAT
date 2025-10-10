@@ -1,27 +1,16 @@
-body {
+:host {
     display: block;
-    font-family: 'Poppins', sans-serif;
     background-color: #c4f82a;
     color: #1A202C;
     --accent-color: #121212;
-    min-height: 100vh;
-    box-sizing: border-box;
-    margin: 0;
-    /* Esconde a barra de rolagem */
-    -ms-overflow-style: none;  /* IE e Edge */
-    scrollbar-width: none;  /* Firefox */
 }
 
-/* Esconde a barra de rolagem para navegadores Webkit (Chrome, Safari) */
-body::-webkit-scrollbar {
-    display: none;
-}
-
+/* A SOLUÇÃO ESTÁ AQUI: Aplicamos o padding no container de dentro, não no :host */
 .about-container {
     max-width: 960px;
     margin-left: auto;
     margin-right: auto;
-    padding: 120px 24px 120px 24px;
+    padding: 120px 24px; /* 120px no topo e embaixo, 24px nas laterais */
 }
 
 .about-hero {
@@ -80,14 +69,14 @@ body::-webkit-scrollbar {
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-    overflow: hidden; /* Garante que a imagem fique com as bordas arredondadas */
+    overflow: hidden; 
 }
 
 .about-section .image-placeholder img {
-     width: 100%;
-     height: 100%;
-     display: block; /* Remove o espaço extra embaixo da imagem */
-     object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
+    width: 100%;
+    height: 100%;
+    display: block; 
+    object-fit: cover; 
 }
 
 .about-legal {
@@ -137,15 +126,43 @@ body::-webkit-scrollbar {
     transform: scaleX(1);
 }
 
+.legal-content {
+  text-align: left;
+  max-width: 650px;
+  margin: 0 auto 32px auto; 
+}
+
+.legal-content h3 {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.legal-content p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #2D3748;
+}
+
+.copyright {
+  text-align: center;
+  font-weight: 600;
+  margin-top: 40px;
+  font-size: 1rem;
+}
+
 .accent-text {
     color: #fff;
     background-color: var(--accent-color);
     padding: 0 12px;
+    display: inline-block;
 }
 
+/* Ajustes para telas maiores */
 @media (min-width: 768px) {
     .about-container {
-        padding-top: 140px;
+        padding-top: 140px; /* Mais espaço no topo para desktop */
     }
     .about-section {
         flex-direction: row;
@@ -154,3 +171,35 @@ body::-webkit-scrollbar {
         flex-direction: row-reverse;
     }
 }
+
+/* Ajustes mobile */
+@media (max-width: 767px) {
+  .about-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .about-hero h1 {
+    font-size: clamp(2rem, 7vw, 2.5rem);
+    line-height: 1.2;
+  }
+  .about-hero .subtitle {
+    font-size: 0.95rem;
+  }
+  .about-section {
+    gap: 32px;
+  }
+  .about-section h2 {
+    font-size: 1.5rem;
+  }
+  .about-section p {
+    font-size: 0.95rem;
+  }
+  .image-placeholder {
+    max-width: 100%;
+    min-height: 200px;
+  }
+  .accent-text {
+    padding: 0 6px;
+  }
+}
+

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface DecadeData {
@@ -18,14 +18,14 @@ interface DecadeData {
   styleUrls: ['./timeline.component.css']
 })
 export class TimelineComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('timelineTrack', { static: true }) timelineTrack!: ElementRef;
-  @ViewChild('timelineDots', { static: true }) timelineDots!: ElementRef;
+  @ViewChild('timelineTrack', { static: true }) timelineTrack!: ElementRef<HTMLDivElement>;
+  @ViewChild('timelineDots', { static: true }) timelineDots!: ElementRef<HTMLDivElement>;
 
   currentIndex = 0;
-  itemWidth = 390; // 350px + 40px gap
-  visibleItems = 1;
+  itemWidth = 0;
+  trackGap = 0;
   autoPlayInterval: any;
-  
+
   decadeData: DecadeData[] = [
     {
       id: '1920s',
@@ -33,7 +33,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
       title: 'Era do Jazz',
       description: 'A revolução feminina na moda com vestidos retos, cabelos à la garçonne e o estilo flapper que simbolizava liberdade e modernidade.',
       trends: ['Vestidos Retos', 'Cabelo Chanel', 'Pérolas Longas', 'Sapatos T-Bar'],
-      image: 'https://images.unsplash.com/photo-1594736797933-d0701ba02e93?w=400&h=300&fit=crop&crop=center'
+      image: 'img/jazz.jpg'
     },
     {
       id: '1950s',
@@ -41,33 +41,35 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
       title: 'New Look',
       description: 'Christian Dior revoluciona a moda com o New Look, trazendo de volta a feminilidade com cinturas marcadas e saias amplas.',
       trends: ['New Look', 'Cintura Marcada', 'Saias Godê', 'Pin-up Style'],
-      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=300&fit=crop&crop=center'
+      image: 'img/newlook.jpg'
     },
     {
       id: '1980s',
       number: '1980s',
       title: 'Power Dressing',
-      description: 'A década do excesso com ombros marcados, cores neon, e o power dressing que representava a ascensão feminina no mundo corporativo.',
+      description: 'A década do excesso com ombros marcados, e o power dressing que representava a ascensão feminina no mundo corporativo.',
       trends: ['Power Suits', 'Cores Neon', 'Ombreiras', 'Leg Warmers'],
-      image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=300&fit=crop&crop=center'
+      image: 'img/powerdress.jpg'
     },
     {
       id: '2000s',
       number: '2000s',
-      title: 'Era Digital',
+      title: 'Y2K',
       description: 'O início do millennium trouxe experimentação extrema com baixa cintura, metalics, e a influência da cultura pop e da tecnologia.',
       trends: ['Low Rise', 'Metallic', 'Cargo Pants', 'Chunky Highlights'],
-      image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=300&fit=crop&crop=center'
+      image: 'img/y2k.jpg'
     },
     {
       id: '2020s',
       number: '2020s',
-      title: 'Sustentabilidade',
+      title: 'Craftcore',
       description: 'A moda consciente ganha força com foco na sustentabilidade, upcycling e a democratização através das redes sociais.',
       trends: ['Sustainable', 'Cottagecore', 'Y2K Revival', 'Gender Neutral'],
-      image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop&crop=center'
+      image: 'img/upcycling.jpg'
     }
   ];
+  
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
     this.initTimeline();
@@ -79,17 +81,23 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   private initTimeline(): void {
-    this.visibleItems = this.getVisibleItems();
+    this.calculateDimensions();
     this.createDots();
     this.bindEvents();
     this.updatePosition();
     this.handleResize();
     this.startAutoPlay();
+    this.cdr.detectChanges();
   }
-
-  private getVisibleItems(): number {
-    const containerWidth = window.innerWidth - 80; // padding
-    return Math.floor(containerWidth / this.itemWidth);
+  
+  private calculateDimensions(): void {
+    const trackEl = this.timelineTrack.nativeElement;
+    const firstItem = trackEl.querySelector<HTMLElement>('.timeline-item');
+    if (firstItem) {
+      this.itemWidth = firstItem.offsetWidth;
+      const trackStyle = window.getComputedStyle(trackEl);
+      this.trackGap = parseFloat(trackStyle.gap) || 0;
+    }
   }
 
   private createDots(): void {
@@ -105,9 +113,11 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+
   private bindEvents(): void {
-    // Touch/Swipe support
+
     let startX = 0;
+
     let isDragging = false;
 
     const track = this.timelineTrack.nativeElement;
@@ -128,28 +138,24 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
       const diffX = startX - endX;
       
       if (Math.abs(diffX) > 50) {
-        if (diffX > 0) {
-          this.nextSlide();
-        } else {
-          this.prevSlide();
-        }
+        if (diffX > 0) this.nextSlide();
+        else this.prevSlide();
       }
       isDragging = false;
     };
 
-    // Keyboard navigation
+
     const keyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') this.prevSlide();
       if (e.key === 'ArrowRight') this.nextSlide();
     };
 
-    track.addEventListener('touchstart', touchStart);
+    track.addEventListener('touchstart', touchStart, { passive: true });
     track.addEventListener('touchmove', touchMove);
     track.addEventListener('touchend', touchEnd);
     document.addEventListener('keydown', keyDown);
 
-    // Store references for cleanup
-    track.removeEventListeners = () => {
+    (track as any).removeEventListeners = () => {
       track.removeEventListener('touchstart', touchStart);
       track.removeEventListener('touchmove', touchMove);
       track.removeEventListener('touchend', touchEnd);
@@ -158,7 +164,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   private removeEventListeners(): void {
-    const track = this.timelineTrack.nativeElement;
+    const track = this.timelineTrack.nativeElement as any;
     if (track.removeEventListeners) {
       track.removeEventListeners();
     }
@@ -167,44 +173,36 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   goToSlide(index: number): void {
     this.currentIndex = Math.max(0, Math.min(index, this.decadeData.length - 1));
     this.updatePosition();
-    this.stopAutoPlay(); // Stop autoplay on manual interaction
+    this.stopAutoPlay(); 
+    this.startAutoPlay();
   }
 
   nextSlide(): void {
-    if (this.currentIndex < this.decadeData.length - 1) {
-      this.currentIndex++;
-      this.updatePosition();
-    } else {
-      // Loop back to first slide
-      this.currentIndex = 0;
-      this.updatePosition();
-    }
+    this.currentIndex = (this.currentIndex + 1) % this.decadeData.length;
+    this.updatePosition();
+    this.stopAutoPlay();
+    this.startAutoPlay();
   }
 
   prevSlide(): void {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
-      this.updatePosition();
-    } else {
-      // Loop to last slide
-      this.currentIndex = this.decadeData.length - 1;
-      this.updatePosition();
-    }
+    this.currentIndex = (this.currentIndex - 1 + this.decadeData.length) % this.decadeData.length;
+    this.updatePosition();
+    this.stopAutoPlay();
+    this.startAutoPlay();
   }
 
   private updatePosition(): void {
-    // Center the current item
-    const offset = -this.currentIndex * this.itemWidth + (window.innerWidth / 2) - (this.itemWidth / 2);
+    const totalItemWidth = this.itemWidth + this.trackGap;
+    const offset = -this.currentIndex * totalItemWidth + (window.innerWidth / 2) - (this.itemWidth / 2);
     const track = this.timelineTrack.nativeElement;
     track.style.transform = `translateX(${offset}px)`;
 
-    // Update active states
-    const items = document.querySelectorAll('.timeline-item');
+    const items = track.querySelectorAll('.timeline-item');
     items.forEach((item, index) => {
       item.classList.toggle('active', index === this.currentIndex);
     });
 
-    // Update dots
+
     const dots = this.timelineDots.nativeElement.querySelectorAll('.dot');
     dots.forEach((dot: Element, index: number) => {
       dot.classList.toggle('active', index === this.currentIndex);
@@ -213,12 +211,13 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   private handleResize(): void {
     window.addEventListener('resize', () => {
-      this.visibleItems = this.getVisibleItems();
+      this.calculateDimensions();
       this.updatePosition();
     });
   }
 
   private startAutoPlay(): void {
+    if(this.autoPlayInterval) this.stopAutoPlay();
     this.autoPlayInterval = setInterval(() => {
       this.nextSlide();
     }, 5000);
@@ -231,19 +230,9 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  onMouseEnter(): void {
-    this.stopAutoPlay();
-  }
+  onMouseEnter(): void { this.stopAutoPlay(); }
+  onMouseLeave(): void { this.startAutoPlay(); }
 
-  onMouseLeave(): void {
-    this.startAutoPlay();
-  }
-
-  get isPrevDisabled(): boolean {
-    return false; // Always enabled for looping
-  }
-
-  get isNextDisabled(): boolean {
-    return false; // Always enabled for looping
-  }
+  get isPrevDisabled(): boolean { return false; }
+  get isNextDisabled(): boolean { return false; }
 }

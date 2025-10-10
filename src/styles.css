@@ -6,21 +6,8 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     margin: 0;
+    padding-top: 30px;
   }
   
-  /* Header com logo */
-  .logo {
-    font-family: 'Anton', sans-serif;
-    font-weight: bold;
-  }
-  
-  /* Barra rotativa (footer) */
-  .scrolling-text {
-    font-family: 'Anton', sans-serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 900;
-    color: #c4f82a;
-    animation: moveText 20s linear infinite;
-    letter-spacing: 2px;
-  }
+
   
